@@ -11,6 +11,8 @@ dependencies {
     implementation(files("../NoteManagerLibrary/build/libs/NoteManagerLibrary-1.0-SNAPSHOT.jar"))
     //implementation(project(":NoteManagerLibrary"))
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+    implementation("org.xerial:sqlite-jdbc:3.50.3.0")
+
 }
 
 application {

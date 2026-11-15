@@ -42,7 +42,7 @@ something like a mobile application but the groundwork is laid.
 
 - [Intellij IDEA](https://www.jetbrains.com/idea/)
 - [Welcome Tour of Kotlin](https://kotlinlang.org/docs/kotlin-tour-welcome.html)
-
+-
 # Future Work
 
 

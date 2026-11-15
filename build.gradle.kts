@@ -14,6 +14,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     testImplementation(kotlin("test"))
     implementation(project(":NoteManagerLibrary"))
+    implementation("org.xerial:sqlite-jdbc:3.50.3.0")
+
 }
 
 kotlin {

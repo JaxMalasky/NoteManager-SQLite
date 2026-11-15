@@ -5,94 +5,107 @@ import java.io.File
 
 
  class NoteManager {
-    private val notes = mutableListOf<Note>()
-     private var notesFile = File("notes.json")
+    private val database = Database()
+    private val repository = NoteRepository(database)
 
-     //used to create note and add it to the array
-    fun createNote(title: String, noteBody: String){
-       val note  = Note(title,noteBody)
-        notes.add(note)
-        saveNotes()
+
+     //used to create note and hand it to the data access layer
+    fun createGeneralNote(title: String, noteBody: String){
+         val generalNote = GeneralNote(title, noteBody)
+         repository.insertNote(generalNote) // insert note into the datbase
+
     }
+     fun createReminderNote(title: String, noteBody: String, deadline: String){
+         val reminderNote = ReminderNote(title = title, noteBody = noteBody, deadLine = deadline)
+         repository.insertNote(reminderNote) // insert note into the datbase
+
+     }
+
+     fun createMentalNote(title: String, noteBody: String, emotion: String){
+         val mentalNote = MentalNote(title = title, noteBody = noteBody, emotion = emotion)
+         repository.insertNote(mentalNote)
+     }
+
+
+
+
     //returns the note list
     fun getNotes(): List<Note>{
-        if(notes.isEmpty()){
-            println("No notes founds")
-        }
-        return notes
+
+        return repository.selectNotes()
     }
-    //expects a int to delete a note with
+
+    //expects an int to delete a note with
     fun deleteNote(i: Int){
-        val index = i - 1 // calculate the index for the mutable list.
-        notes.removeAt(index)
-        saveNotes() //update file after deleting a note
+
+        repository.deleteNote(i)
+
     }
-// to be implemented Delete by note function, may be useful
-//     fun deleteNote(note: Note){
-//         for(notes in notes){
-//
-//             if(notes.title == note.title){
-//
-//             }
-//
-//         }
-//         saveNotes() //update file after deleting a note
-//     }
-
-     //sorts list by oldest first
-     fun sortNotesOldest(){
-         notes.sortBy{it.time}
-     }
-     //sorts list by newest first
-     fun sortNotesNewest(){
-         notes.sortByDescending {it.time}
-     }
-
 
 
      fun clearAllNotes(){
-         notes.clear()
-         notesFile.writeText("[]")
+         repository.deleteAllNotes()
 
      }
 
     //Overloading edit functions.
 
-    fun editNote(note: Note, title: String, body: String){
-        note.title = title
-        note.noteBody = body
-    }
+     fun editNote(id: Int, title: String, body: String) {
+         val note = repository.selectNote(id) ?:return  //evlis operator for potential null reception.
+         note.title = title
+         note.noteBody = body
 
-    //used to edit note by int value
-    fun editNote(i: Int, title: String, body: String){
-       if(notes.isEmpty()){
+         repository.updateNote(note)
+     }
 
-           return
-       }
-        val index = i - 1 // calculate the index for the mutable list.
-        notes[index].title = title
-        notes[index].noteBody = body
-    }
-
-     fun loadNotes(){
-
-         if(!notesFile.exists()){
-             notesFile.writeText("[]")
-             return
+     fun editMentalNote(id: Int, title: String, body: String, emotion: String) {
+         val note = repository.selectNote(id) ?:return  //evlis operator for potential null reception.
+         when(note){
+             is MentalNote ->{
+                 note.title = title
+                 note.noteBody = body
+                 note.emotion = emotion
+                 repository.updateNote(note)
+             }
          }
 
-         val notesJson = notesFile.readText()
-         notes.clear() // clear notes mutable list
-         notes.addAll(Json.decodeFromString(notesJson)) //decode json and add to string
+     }
+
+     fun editReminderNote(id: Int, title: String, body: String, deadline: String) {
+         val note = repository.selectNote(id) ?:return  //evlis operator for potential null reception.
+         when(note){
+             is ReminderNote ->{
+                 note.title = title
+                 note.noteBody = body
+                 note.deadLine = deadline
+                 repository.updateNote(note)
+             }
+         }
+
 
      }
 
-    //saves notes list in JSON format
-     fun saveNotes(){
-         val json = Json
-         val notesJson = json.encodeToString(notes)
-         File("notes.json").writeText(notesJson)
+
+     //functions for summary
+
+     fun getNoteById(id: Int): Note?{
+         return repository.selectNote((id))
      }
+
+     fun getNoteCount(): Int {
+         return repository.getNoteCount()
+     }
+     fun getMentalNoteCount(): Int {
+         return repository.getMentalNoteCount()
+     }
+    fun getReminderNoteCount(): Int {
+        return repository.getReminderNoteCount()
+    }
+     fun getGeneralNoteCount(): Int {
+         return repository.getGeneralNoteCount()
+     }
+
+
 
 
 }
