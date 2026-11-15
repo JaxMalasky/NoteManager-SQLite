@@ -10,9 +10,15 @@ Data access layer. If a user chooses to create a note, the input is passed to No
 the note object's data is broken down and placed into a parameterized SQL Query which will store the data in notes.db database. Retreival is the opposite where the note is formed and returned by repository functions SelectNotes/Notes
 that the NoteManager can call.  
 
-
-With this project I wanted to further my learning as a software engineer by practicing common software layer architecture (Presentation, Application, Business, Database) and the use of
+this project I wanted to further my learning as a software engineer by practicing common software layer architecture (Presentation, Application, Business, Database) and the use of
 relational databases as persistent storage.
+
+How to use:
+- The program uses NoteManagerLibrary-1.0-SNAPSHOT.jar as a Gradle dependency. This means the library could potentially be reused to
+develop different types of interfaces, although this has not been tested.
+- For this project everything was ran inside the Intellij terminal but provided Java installed it should be able to run in CMD, PowerShell or other CLI's with a little bit of work
+
+
 
 
 Walkthrough and Demonstration Video
