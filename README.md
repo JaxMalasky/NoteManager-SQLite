@@ -1,53 +1,61 @@
 # Overview
-Note Manager Kotlin Library and CLI Interface
-
-This projects demonstrates my learning of the Kotlin language in the areas of encapsulation by way of a packaged library
 
 
-The software created includes a NotesManager.jar file and a CLI interface used demonstrates its functionality. 
-The program allows the user to create, edit, and organize notes through the CLI. The users notes will also persist when the program is closed.
+The software is built off my previous NoteLibrary which can be found under my repositories (called NoteMan). The goal for this project was to replace the JSON persistent storage
+with a SQLite database. 
 
-The NoteManager code includes two classes.
-- Note.kt :  a Serializable data class whose contents can be written in a JSON format and stored by the NotesManager.kt. 
-- NoteManager.Kt: Contains the API functions for the creation, storage, and manipulation of the notes. The notes are stored in a mutable list while the program is running and later
-into JSON file to persist when the program is closed. 
-
-The software was developed as an intro to the Kotlin language but to also explore the
-process of creating and packaging an API library to be usable
-with different interfaces. So far I have only implemented a 
-CLI interface. For certain work would probably need to be 
-done on the API side of things to have it be fully functional with 
-something like a mobile application but the groundwork is laid. 
+The software allows the user to create modify and remove notes that are represented in code as instnaces of the Note object. The Note Object is an abstract class with 3 concrete clasess, general note
+reminder note, and mental note. The user can create these different types of notes through the CLI which are store in the database. The application layer(NoteManager.Kt) of this program handles the passing of information between the CLI and the
+Data access layer. If a user chooses to create a note, the input is passed to NoteManger to create an instance of a note object which then can be passed to the Data access layer(NoteRepository) where
+the note object's data is broken down and placed into a parameterized SQL Query which will store the data in notes.db database. Retreival is the opposite where the note is formed and returned by repository functions SelectNotes/Notes
+that the NoteManager can call.  
 
 
+With this project I wanted to further my learning as a software engineer by practicing common software layer architecture (Presentation, Application, Business, Database) and the use of
+relational databases as persistent storage.
 
 
+Walkthrough and Demonstration Video
+[https://www.youtube.com/watch?v=9HAnBbdG1Zk)
 
-[Software Demo Video](https://youtu.be/uOzPcyXUGts)
+# Relational Database
 
+SQLite - This database method was chosen because it conveniently operates out of an embedded database file in the project folder making
+it a good choice to have the program be self-contained
+
+Database Structure {Describe the structure (tables) of the relational database that you created.}
+- Database - notes.db
+- Tables 
+  - Notes - noteID, title, body, timeCreated, noteType
+  - GeneralNotes - noteId
+  - ReminderNotes - noteId, deadline
+  - MentalNotes - noteId, emotion 
 
 # Development Environment
-*IDE* 
-- IntellIJ
 
+TOOLS USED
+- Intellij IDEA 
+  - Gradle
+- SQLite
 
-*Language and Libraries used*
-- Kotlin (programming language)
-- kotlinx.serialization (Library)
-- kotlinx.serialization.json (Library)
-- java.time (Library)
+LANGUAGE AND LIBRARIES
+- Kotlin, programming language
+- JDBC / Java Database Connectivity Library
+- Kotlin Seralization library
+
 # Useful Websites
 
 {Make a list of websites that you found helpful in this project}
 
-- [Intellij IDEA](https://www.jetbrains.com/idea/)
-- [Welcome Tour of Kotlin](https://kotlinlang.org/docs/kotlin-tour-welcome.html)
--
+- [SQLite Tutorial](https://www.sqlitetutorial.net/)
+- [Kotlin Docs](https://kotlinlang.org/docs/home.html)
+- [What Are the 5 Primary Layers in Software Architecture?](https://www.indeed.com/career-advice/career-development/what-are-the-layers-in-software-architecture)
+
 # Future Work
-
-
-
-- Error Handling in both API and CLI, I have note tested it for errors very throughly and you could probably break it easily
-- There are functions that are unimplemented or unfinished and commented out in NoteManager.kt. I wrote them thinking they might useful later and on some did not finish building them. 
-- The process of organizing notes is kind of restricting in the CLI. You can only organize by old or new and you also HAVE to choose one of them to view the notes. It would be better to have implemented a skip.
-- It would be best to develop another piece of software to use the NoteManger library to fully demonstrate its versitility(in a beginner level context) 
+- There is a lot of duplicated code because the way I handle the notes, this would not be good for scaleablility
+so if I wanted to practice that I would look for a way to stream line it.
+- The displayed notes use database noteID key in the CLI but when I delete a note and create a new one it will take the number after it, EX 2-deleted, 3 would be created.
+The notes would be better displayed with consistant numbers 
+- There is not much error handling so its can break easily
+- The user interface could use some smoothing out, some menu selections have a wait period which kind of throws me off when others do not. Ex summary option. 
+- The CLI and Controller are combined, it may be a good idea to seperate the concerns of those functions but at this point with the simplicity of the user interface its not too bad. 
